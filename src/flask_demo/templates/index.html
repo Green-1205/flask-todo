@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>待辦清單</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <main>
+    <h1>待辦清單</h1>
+    <p class="meta">共 {{ counts.total }} 項，完成 {{ counts.done }} 項</p>
+
+    <form class="add" method="post" action="{{ url_for('create', show=show) }}">
+      <input name="title" placeholder="要做什麼？" maxlength="200" autofocus required>
+      <button type="submit">新增</button>
+    </form>
+
+    <nav class="filters">
+      {% for key, label in [('all', '全部'), ('active', '未完成'), ('done', '已完成')] %}
+        <a href="{{ url_for('index', show=key) }}" {% if show == key %}aria-current="page"{% endif %}>{{ label }}</a>
+      {% endfor %}
+    </nav>
+
+    <ul class="todos">
+      {% for todo in todos %}
+        <li class="{{ 'done' if todo.done }}">
+          <form method="post" action="{{ url_for('toggle', todo_id=todo.id, show=show) }}">
+            <button class="check" type="submit" aria-label="{{ '標為未完成' if todo.done else '標為完成' }}">{{ '✓' if todo.done }}</button>
+          </form>
+          <span class="title">{{ todo.title }}</span>
+          <form method="post" action="{{ url_for('delete', todo_id=todo.id, show=show) }}">
+            <button class="delete" type="submit" aria-label="刪除">×</button>
+          </form>
+        </li>
+      {% else %}
+        <li class="empty">這裡沒有項目</li>
+      {% endfor %}
+    </ul>
+
+    {% if counts.done %}
+      <form method="post" action="{{ url_for('clear_done', show=show) }}">
+        <button class="clear" type="submit">清除已完成（{{ counts.done }}）</button>
+      </form>
+    {% endif %}
+  </main>
+</body>
+</html>

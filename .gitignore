@@ -6,3 +6,4 @@ instance/
 .env
 .DS_Store
 raw_data/
+.claude/settings.local.json

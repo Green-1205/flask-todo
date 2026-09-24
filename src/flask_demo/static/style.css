@@ -58,7 +58,10 @@ button { font: inherit; cursor: pointer; }
 .delete { border: 0; background: none; color: var(--muted); font-size: 20px; line-height: 1; }
 .delete:hover { color: var(--danger); }
 .empty { color: var(--muted); justify-content: center; }
-.clear {
-  margin-top: 12px; border: 0; background: none; color: var(--muted); font-size: 14px; padding: 0;
+.actions { display: flex; justify-content: space-between; margin-top: 12px; }
+.actions form { margin: 0; }
+.toggle-all, .clear {
+  border: 0; background: none; color: var(--muted); font-size: 14px; padding: 0;
 }
+.toggle-all:hover { color: var(--accent); }
 .clear:hover { color: var(--danger); }

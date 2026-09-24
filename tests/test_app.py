@@ -41,6 +41,25 @@ def test_clear_done(client):
     assert "共 1 項，完成 0 項" in client.get("/").get_data(as_text=True)
 
 
+def test_toggle_all(client):
+    for title in ("a", "b", "c"):
+        client.post("/todos", data={"title": title})
+    client.post("/todos/2/toggle")
+
+    client.post("/todos/toggle-all")
+    page = client.get("/").get_data(as_text=True)
+    assert "共 3 項，完成 3 項" in page and "全部標為未完成" in page
+
+    client.post("/todos/toggle-all")
+    page = client.get("/").get_data(as_text=True)
+    assert "共 3 項，完成 0 項" in page and "全部標為完成" in page
+
+
+def test_toggle_all_hidden_when_empty(client):
+    assert "全部標為" not in client.get("/").get_data(as_text=True)
+    assert client.post("/todos/toggle-all").status_code == 302
+
+
 def test_missing_todo_404(client):
     assert client.post("/todos/99/toggle").status_code == 404
     assert client.post("/todos/99/delete").status_code == 404

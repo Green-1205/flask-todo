@@ -38,10 +38,17 @@
       {% endfor %}
     </ul>
 
-    {% if counts.done %}
-      <form method="post" action="{{ url_for('clear_done', show=show) }}">
-        <button class="clear" type="submit">清除已完成（{{ counts.done }}）</button>
-      </form>
+    {% if counts.total %}
+      <div class="actions">
+        <form method="post" action="{{ url_for('toggle_all', show=show) }}">
+          <button class="toggle-all" type="submit">{{ '全部標為未完成' if counts.done == counts.total else '全部標為完成' }}</button>
+        </form>
+        {% if counts.done %}
+          <form method="post" action="{{ url_for('clear_done', show=show) }}">
+            <button class="clear" type="submit">清除已完成（{{ counts.done }}）</button>
+          </form>
+        {% endif %}
+      </div>
     {% endif %}
   </main>
 </body>

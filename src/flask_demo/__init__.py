@@ -72,6 +72,14 @@ def create_app(test_config: dict | None = None) -> Flask:
         db.commit()
         return redirect(url_for("index", show=request.args.get("show", "all")))
 
+    @app.post("/todos/toggle-all")
+    def toggle_all():
+        db = get_db()
+        has_active = db.execute("SELECT 1 FROM todos WHERE done = 0 LIMIT 1").fetchone()
+        db.execute("UPDATE todos SET done = ?", (1 if has_active else 0,))
+        db.commit()
+        return redirect(url_for("index", show=request.args.get("show", "all")))
+
     @app.post("/todos/clear-done")
     def clear_done():
         db = get_db()
